@@ -60,7 +60,7 @@ def getYKL(record):
 
 
 def hasYkl(record):
-    return len(getYKL(record)) > 1
+    return len(getYKL(record)) > 0
 
 
 def isFiction(record):
@@ -84,6 +84,7 @@ def process(inputfile):
             if isRecordBoundary(line) and record:
                 if isLiterature(record):
                     if not hasYkl(record):
+                        # print("".join(record))
                         found["ei luokitusta"] += 1
                     else:
                         if isFiction(record):
