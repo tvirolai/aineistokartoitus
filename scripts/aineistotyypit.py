@@ -1,16 +1,27 @@
 import argparse
 
+"""
+Etsi tietueet, joissa on muiden(kin) kuin yleisten kirjastojen tunnukset.
+"""
+
 def getTag(line):
     return line[10:13]
-
 
 def getContent(line):
     return line[18:]
 
+def hasOwner(record, lowtag):
+    return list(filter(lambda x: getTag(x) == "LOW" and lowtag in
+        getContent(x), record))
 
-def isNonsub(record):
-    return len([x for x in record if getTag(x) == "773"]) == 0
+def getId(record):
+    if len(record) > 0:
+        return record[0][:9]
 
+
+def getOwners(record):
+    # Return a list of LOW-tags in record.
+    return [x[21:-1] for x in record if getTag(x) == "LOW"]
 
 def isEmaterial(record):
     """
@@ -26,38 +37,31 @@ def isEmaterial(record):
         return True
     return False
 
-
-def isOnlyOwner(record, lowtag):
-    lowFields = [x for x in record if getTag(x) == "LOW"]
-    return len(lowFields) == 1
-
-
 def isRecordBoundary(line):
     return "FMT   L" in line
 
+
+def getFormatCode(record):
+    return record[0][18:]
+
 def process(inputfile, outputfile):
-    with open(inputfile, 'rt') as f, open(outputfile, 'wt') as o:
+    with open(inputfile, 'rt') as f:
+        out = open(outputfile, "wt")
         record = []
         read = 0
         found = 0
-        found_nonsub = 0
+        tags = {"PIKI": 0, "ANDER": 0, "VASKI": 0, "KUOPI": 0}
         for line in f:
-            if isRecordBoundary(line):
-                if isOnlyOwner(record, "VASKI"):
-                    o.write('\n'.join(record))
-                    found += 1
-                    if isNonsub(record):
-                        found_nonsub += 1
-                    if found % 100 == 0:
-                        print("Found {0} recs ({1} non-subrecords) owned only "
-                                "by Vaski ({2} records read)".format(found,
-                                    found_nonsub, read))
+            if isRecordBoundary(line) and record:
+                print(getFormatCode(record))
+                found += 1
+                if read % 500000 == 0:
+                    print(
+                    "Read {0} records, muu Melinda: {1}".format(read, found))
                 read += 1
                 record = []
-            if len(line) > 0:
-                record.append(line.strip())
-        print("Total: {0} only Vaski, of which {1} non-sub".format(found,
-            found_nonsub))
+            record.append(line)
+        out.close()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -25,6 +25,10 @@ def getId(record):
         return record[0][:9]
 
 
+def getFormatCode(record):
+    return record[0][18:]
+
+
 def getOwners(record):
     # Return a list of LOW-tags in record.
     return [x[21:-1] for x in record if getTag(x) == "LOW"]
@@ -49,7 +53,7 @@ def isRecordBoundary(line):
 
 def isLiterature(record):
     FMT = [field for field in record if getTag(field) == "FMT"]
-    return "BK" in FMT.pop()
+    return "BK" in FMT.pop() if FMT else False
 
 
 def getYKL(record):
@@ -79,34 +83,33 @@ def process(inputfile):
     with open(inputfile, 'rt') as f:
         record = []
         read = 0
-        found = {"tieto": 0, "kauno": 0, "ei luokitusta": 0}
+        found = {"BKtieto": 0, "BKkauno": 0, "BKmuut": 0, "MU": 0, "VM": 0, "MUUT": 0}
         for line in f:
             if isRecordBoundary(line) and record:
                 if isLiterature(record):
                     if not hasYkl(record):
                         # print("".join(record))
-                        found["ei luokitusta"] += 1
+                        found["BKmuut"] += 1
                     else:
                         if isFiction(record):
-                            found["kauno"] += 1
+                            found["BKkauno"] += 1
                         else:
-                            found["tieto"] += 1
-                if read % 100000 == 0:
-                    print("Luettu {0} tietuetta.\n" \
-                          "Kaunokirjallisuus: {1}\n" \
-                          "tietokirjallisuus: {2}\n" \
-                          "ei YKL-luokitusta: {3}".format(
-                              read, found["kauno"], found["tieto"],
-                              found["ei luokitusta"]))
+                            found["BKtieto"] += 1
+                else:
+                    code = getFormatCode(record).strip()
+                    if code == "MU":
+                        found["MU"] += 1
+                    elif code == "VM":
+                        found["VM"] += 1
+                    else:
+                        found["MUUT"] += 1
+                # if read % 50000 == 0:
+                #     print("Luettu {0} tietuetta.\n{1}".format(read, found))
                 read += 1
                 record = []
             record.append(line)
-        print("Luettu {0} tietuetta.\n" \
-              "Kaunokirjallisuus: {1}\n" \
-              "tietokirjallisuus: {2}\n" \
-              "ei YKL-luokitusta: {3}".format(
-                  read, found["kauno"], found["tieto"],
-                  found["ei luokitusta"]))
+        print("YHTEENSÄ:")
+        print(found)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
