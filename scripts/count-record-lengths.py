@@ -56,7 +56,11 @@ def process(inputfile, outputfile):
         for line in f:
             if isRecordBoundary(line) and record:
                 length = recordLength(record)
-                out.write("{0}\n".format(length))
+                if length == 41 or length == 11:
+                    print("Tietueen pituus: {0}".format(length))
+                    printableRec = "".join([x for x in record if all(char.isdigit() for char in getTag(x)) or getTag(x) == "LDR"])
+                    print(printableRec)
+                # out.write("{0}\n".format(length))
                 if length in lengths:
                     lengths[length] += 1
                 else:
