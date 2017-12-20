@@ -1,0 +1,128 @@
+\\b[Nn]\\.', 'noin', 'g'); \
+                      (\\d+) s\\.', '\\1 sivua', 'g'); \
+                      (\\[\\d+\\]) s\\.', '\\1 sivua', 'g'); \
+                      (\\d+) bl\\.', '\\1 blad', 'g'); \
+                      \\bs\\. (\\d+-\\d+)', 'sivut \\1', 'g'); \
+                      S\\. (\\d+-\\d+)', 'sivut \\1', 'g'); \
+                      1 vol\\.', '\\1 nide', 'g'); \
+                      (\\d+) vol\\.', '\\1 nidettä', 'g'); \
+                      \\bsek([^A-Z-a-z])', 's\\1', 'g'); \
+                      ss\\.', 'sivut', 'g'); \
+                      \\bkuv\\.', 'kuvitettu', 'g'); \
+                      \\bmuotokuv\\.', 'muotokuvia', 'g'); \
+                      verkkojulkaisu', 'verkkoaineisto', 'g'); \
+                      Verkkojulkaisu', 'Verkkoaineisto', 'g')
+
+#define macro 300BE | kartt\\.', 'karttoja', 'g'); \
+                      kuv\\.', 'kuvitettu', 'g'); \
+                      mv\\.', 'mustavalkoinen', 'g'); \
+                      vär\\.', 'värillinen', 'g'); \
+                      värikuv\\.', 'värikuvitus', 'g'); \
+                      nuott\\.', 'nuotteja', 'g'); \
+                      kuval\\.', 'kuvalehteä', 'g'); \
+                      diagrs\\.', 'diagrams', 'g'); \
+                      incl\\.', 'includes', 'g'); \
+                      fold(\\.)* maps', 'folded maps', 'g'); \
+                      (\\d+) irtol\\.', '\\1 irtolehteä'); \
+                      Replace('kuvas.' By 'kuvasivua'); \
+                      ([^0-9]) (taul[.,])', '\\1 taulukkoja', 'g'); \
+                      \\btaul\\.', 'taulukkoja', 'g'); \
+                      hakem\\.|hakem(\$|\\b)', 'hakemisto', 'g'); \
+                      lyh\\. luett\\.', 'lyhenneluettelo', 'g'); \
+                      lähdel\\.|lähdel(\$|\\b)', 'lähdeluettelo', 'g'); \
+                      liitel\\.|liitel(\$|\\b)', 'liiteluettelo', 'g'); \
+                      (\\d*) taul\\.', '\\1 taulukkoa', 'g'); \
+                      (\\d*) karttal\\.', '\\1 karttaliitettä', 'g'); \
+                      \\] kuvas\\.|\\] kuvas(\$|\\b)', '] kuvasivua', 'g'); \
+                      1 liites\\.|1 liites(\$|\\b)', '1 liitesivu', 'g'); \
+                      liites\\.|liites(\$|\\b)', 'liitesivua', 'g'); \
+                      liitt\\.', 'liitteitä', 'g'); \
+                      [Vv]erkkokirja', 'verkkoaineisto', 'g')
+
+// Musiikin esityskokoonpanotermien avaaminen, osakenttä $m kentissä 130, 240, 600, 610, 630, 700, 710, 730, 800, 810, 830
+
+#define macro ESITYSKOKOONPANO | pianotrio', 'piano, viulu, sello'); \
+                                 pianokvartetti', 'piano, viulu, alttoviulu, sello'); \
+                                 pianokvintetti', 'piano, viulut (2), alttoviulu, sello'); \
+                                 \\bork\\.|\\bork(\$|\\b)', 'orkesteri', 'g'); \
+                                 jousiork\\.|jousiork(\$|\\b)', 'jousiorkesteri'); \
+                                 kamariork\\.|kamariork(\$|\\b)', 'orkesteri'); \
+                                 puhallinork\\.|puhallinork(\$|\\b)', 'puhallinorkesteri'); \
+                                 \\bkät\\.|\\bkät(\$|\\b)', 'kätisesti'); \
+                                 soitinääni', 'määrittämätön soitin'); \
+                                 \\bS\\s*(\\(\\d+)', 'sopraanot \\1', 'g'); \
+                                 \\bS(,|\\s|/|\\)|\$)', 'sopraano\\1', 'g'); \
+                                 \\bMz\\s*(\\(\\d+)', 'mezzosopraanot \\1', 'g'); \
+                                 \\bMz(,|\\s|/|\\)|\$)', 'mezzosopraano\\1', 'g'); \
+                                 \\bA\\s*(\\(\\d+)', 'altot \\1', 'g'); \
+                                 \\bA(,|\\s|/|\\)|\$)', 'altto\\1', 'g'); \
+                                 \\bKt\\s*(\\(\\d+)', 'kontratenorit \\1', 'g'); \
+                                 \\bKt(,|\\s|/|\\)|\$)', 'kontratenori\\1', 'g'); \
+                                 \\bT\\s*(\\(\\d+)', 'tenorit \\1', 'g'); \
+                                 \\bT(,|\\s|/|\\)|\$)', 'tenori\\1', 'g'); \
+                                 \\bBar\\s*(\\(\\d+)', 'baritonit \\1', 'g'); \
+                                 \\bBar(,|\\s|/|\\)|\$)', 'baritoni\\1', 'g'); \
+                                 \\bB\\s*(\\(\\d+)', 'bassot \\1', 'g'); \
+                                 \\bB(,|\\s|/|\\)|\$)', 'basso\\1', 'g'); \
+                                 If (RegFind(S, 'sovitettu, jousitrio') >= 0) Or (RegFind(S, ', jousitrio') < 0) jousitrio', 'viulu, alttoviulu, sello'); \
+                                 If (RegFind(S, 'sovitettu, jousikvartetti') >= 0) Or (RegFind(S, ', jousikvartetti') < 0) jousikvartetti', 'viulut (2), alttoviulu, sello'); \
+                                 If (RegFind(S, 'sovitettu, jousikvintetti') >= 0) Or (RegFind(S, ', jousikvintetti') < 0) jousikvintetti', 'viulut (2), alttoviulut (2), sello'); \
+                                 If (RegFind(S, 'sovitettu, puupuhallinkvartetti') >= 0) Or (RegFind(S, ', puupuhallinkvartetti') < 0) puupuhallinkvartetti', 'huilu, oboe, klarinetti, fagotti'); \
+                                 If (RegFind(S, 'sovitettu, puhallinkvintetti') >= 0) Or (RegFind(S, ', puhallinkvintetti') < 0) puhallinkvintetti', 'huilu, oboe, klarinetti, käyrätorvi, fagotti')
+
+#define macro TRIOT            | ^piano, jouset', 'piano, viulu, sello'); \
+                                 ^jouset', 'viulu, alttoviulu, sello')
+
+#define macro KVARTETOT        | ^piano, jouset', 'piano, viulu, alttoviulu, sello');\
+                                 ^jouset', 'viulut (2), alttoviulu, sello'); \
+                                 ^puupuhaltimet', 'huilu, oboe, klarinetti, fagotti')
+
+#define macro KVINTETOT        | ^jouset', 'viulut (2), alttoviulut (2), sello'); \
+                                 ^piano, jouset', 'piano, viulut (2), alttoviulu, sello'); \
+                                 ^puhaltimet', 'huilu, oboe, klarinetti, käyrätorvi, fagotti')
+
+#define macro SOVITUSMERKINTO | sov\\.', 'sovitettu', 'g')
+
+#define macro RAAMATTU | \\bUT(\\b|\\.)', 'Uusi testamentti', 'g'); \
+                         \\bVT(\\b|\\.)', 'Vanha testamentti', 'g')
+
+
+#define macro FIKTIIVINENHAHMO | fikt\\.', '(fiktiivinen hahmo)', 'g'); \
+                                 fiktiivinen henkilö', '(fiktiivinen hahmo)', 'g')
+
+#define macro FIKTIIVINENYHTEISO | fikt\\.', '(fiktiivinen yhteisö)')
+
+#define macro AIKAMAAREET | \\bs\\.', 'syntynyt', 'g'); \
+                            \\bk\\.', 'kuollut', 'g'); \
+                            \\bn\\.', 'noin', 'g'); \
+                            \\bvs\\.', 'vuosisata', 'g')
+
+#define macro SIDOSASUT |  \\bsid\\.|\\bsid\\b', 'sidottu', 'g'); \
+                           \\bnid\\.|\\bnid\\b', 'nidottu', 'g'); \
+                           \\bvirh\\b|\\bvirh\\.', 'virheellinen', 'g'); \
+                           \\binb\\b|\\binb\\.', 'inbunden', 'g'); \
+                           \\bhft\\b|\\bhft\\.', 'häftad', 'g'); \
+                           \\bpbk\\b|\\bpbk\\.', 'paperback', 'g'); \
+                           \\bhbk\\b|\\bhbk\\.', 'hardback', 'g'); \
+                           \\balk\\b|\\balk\\.', 'alkaline', 'g'); \
+                           \\bbk\\b|\\bbk\\.', 'book', 'g'); \
+                           \\bverkkojulk\\b|\\bverkkojulk\\.', 'verkkoaineisto', 'g')
+
+#define macro VERKKOAINEISTO | paperimuodossa', 'painettuna', 'g'); \
+                               [Pp]aperisena', 'painettuna', 'g'); \
+                               Verkkokirja', '1 verkkoaineisto', 'g'); \
+                               [Ii]nternet-julkaisu\\b', 'verkkoaineisto', 'g'); \
+                               paperisena', 'painettuna', 'g'); \
+                               [Ee]lektroninen aineisto', 'Verkkoaineisto', 'g'); \
+                               erkkojulkaisu', 'erkkoaineisto'); \
+                               Elektroninen julkaisu|Verkkojulkaisuun', 'Linkki verkkoaineistoon')
+
+#define macro FUNKTIOVALIMERKIT | (\\)|[Mm]r\\.|[Mm]rs\\.|[Jj]r\\.|Ph\\.+\\s+D\\.|Dr\\.|Sr\\.|[Rr]ev\\.|\\s[A-Za-z]\\.|\\.[A-Za-z]\\.)($4|$e)', '\\1,\\2', 'g'); \
+                                  \\.($[e|4])', ',\\1', 'g'); \
+                                  ,,', ',')
+
+
+#define macro FUNKTIOT2 | (\\)|[Mm]r\\.|[Mm]rs\\.|[Jj]r\\.|Ph\\.+\\s+D\\.|Dr\\.|Sr\\.|[Rr]ev\\.|\\s[A-Za-z]\\.|\\.[A-Za-z]\\.)($4|$j)', '\\1,\\2', 'g'); \
+                          \\.($[j|4])', ',\\1', 'g'); \
+                          ,,', ',')
+
